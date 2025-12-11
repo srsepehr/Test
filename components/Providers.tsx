@@ -2,15 +2,30 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { seedVideos } from '../lib/seedData';
-import { UserSession, VideoItem } from '../lib/types';
+import {
+  Language,
+  ThemeMode,
+  UserNote,
+  UserSession,
+  VideoItem
+} from '../lib/types';
+import { getDirection } from '../lib/i18n';
 
 interface AppContextShape {
   user: UserSession | null;
   videos: VideoItem[];
   hydrated: boolean;
+  language: Language;
+  theme: ThemeMode;
+  loading: boolean;
+  notes: UserNote[];
   login: (phone: string) => void;
   logout: () => void;
   addVideo: (input: Omit<VideoItem, 'id'>) => VideoItem;
+  setLanguage: (lang: Language) => void;
+  setTheme: (mode: ThemeMode) => void;
+  setLoading: (val: boolean) => void;
+  addNote: (payload: Omit<UserNote, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => UserNote;
 }
 
 const AppContext = createContext<AppContextShape | undefined>(undefined);
@@ -34,12 +49,19 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserSession | null>(null);
   const [videos, setVideos] = useState<VideoItem[]>(seedVideos);
   const [hydrated, setHydrated] = useState(false);
+  const [language, setLanguageState] = useState<Language>('fa');
+  const [theme, setThemeState] = useState<ThemeMode>('system');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [notes, setNotes] = useState<UserNote[]>([]);
 
   // Load state from localStorage once the app mounts on the client.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const storedVideos = window.localStorage.getItem('videos');
     const storedSession = window.localStorage.getItem('session');
+    const storedLanguage = window.localStorage.getItem('language') as Language | null;
+    const storedTheme = window.localStorage.getItem('theme') as ThemeMode | null;
+    const storedNotes = window.localStorage.getItem('notes');
 
     if (storedVideos) {
       try {
@@ -60,8 +82,47 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         setUser(null);
       }
     }
+
+    if (storedLanguage) {
+      setLanguageState(storedLanguage);
+    }
+
+    if (storedTheme) {
+      setThemeState(storedTheme);
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setThemeState(prefersDark ? 'dark' : 'light');
+    }
+
+    if (storedNotes) {
+      try {
+        const parsedNotes = JSON.parse(storedNotes) as UserNote[];
+        setNotes(parsedNotes);
+      } catch (error) {
+        setNotes([]);
+      }
+    }
+
     setHydrated(true);
   }, []);
+
+  // sync HTML direction + lang
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.documentElement.lang = language;
+    document.documentElement.dir = getDirection(language);
+  }, [language]);
+
+  // apply theme class
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    const desired = theme === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : theme;
+    root.classList.remove('light', 'dark');
+    root.classList.add(desired);
+  }, [theme]);
 
   // Persist videos to localStorage.
   useEffect(() => {
@@ -79,6 +140,21 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     }
   }, [user, hydrated]);
 
+  useEffect(() => {
+    if (!hydrated || typeof window === 'undefined') return;
+    window.localStorage.setItem('language', language);
+  }, [language, hydrated]);
+
+  useEffect(() => {
+    if (!hydrated || typeof window === 'undefined') return;
+    window.localStorage.setItem('theme', theme);
+  }, [theme, hydrated]);
+
+  useEffect(() => {
+    if (!hydrated || typeof window === 'undefined') return;
+    window.localStorage.setItem('notes', JSON.stringify(notes));
+  }, [notes, hydrated]);
+
   const login = (phone: string) => setUser({ phone });
   const logout = () => setUser(null);
 
@@ -92,16 +168,42 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     return video;
   };
 
+  const addNote: AppContextShape['addNote'] = (payload) => {
+    const now = new Date().toISOString();
+    const newNote: UserNote = {
+      id: payload.id || buildId(),
+      createdAt: payload.id ? payload.createdAt ?? now : now,
+      updatedAt: now,
+      ...payload
+    };
+    setNotes((prev) => {
+      const filtered = prev.filter((n) => n.id !== newNote.id);
+      return [...filtered, newNote];
+    });
+    return newNote;
+  };
+
+  const setLanguage = (lang: Language) => setLanguageState(lang);
+  const setTheme = (mode: ThemeMode) => setThemeState(mode);
+
   const value = useMemo(
     () => ({
       user,
       videos,
       hydrated,
+      language,
+      theme,
+      loading,
+      notes,
       login,
       logout,
-      addVideo
+      addVideo,
+      setLanguage,
+      setTheme,
+      setLoading,
+      addNote
     }),
-    [user, videos, hydrated]
+    [user, videos, hydrated, language, theme, loading, notes]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -14,7 +14,7 @@ export default function CategorySection({ title, videos, onVideoClick }: Categor
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-900">{title}</h2>
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h2>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {videos.map((video) => (

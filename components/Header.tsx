@@ -3,6 +3,9 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { useAppContext } from './Providers';
 import { useEffect, useState } from 'react';
+import LanguageToggle from './LanguageToggle';
+import ThemeToggle from './ThemeToggle';
+import { useTranslations } from '../lib/useTranslations';
 
 interface HeaderProps {
   searchTerm?: string;
@@ -12,7 +15,8 @@ interface HeaderProps {
 export default function Header({ searchTerm = '', onSearchChange }: HeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, logout } = useAppContext();
+  const { user, logout, setLoading } = useAppContext();
+  const t = useTranslations();
   const [inputValue, setInputValue] = useState(searchTerm);
 
   useEffect(() => {
@@ -20,6 +24,7 @@ export default function Header({ searchTerm = '', onSearchChange }: HeaderProps)
   }, [searchTerm]);
 
   const handleAuthClick = () => {
+    setLoading(true);
     if (user) {
       router.push('/profile');
     } else {
@@ -35,48 +40,56 @@ export default function Header({ searchTerm = '', onSearchChange }: HeaderProps)
   };
 
   return (
-    <header className="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-slate-200">
+    <header className="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-slate-200 shadow-sm dark:bg-slate-900/80 dark:border-slate-700">
       <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
-            ▶
+        <button
+          className="flex items-center gap-3 text-right"
+          onClick={() => {
+            setLoading(true);
+            router.push('/');
+          }}
+        >
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-500 flex items-center justify-center text-white font-black text-lg shadow">
+            KN
           </div>
-          <div>
-            <p className="text-xl font-semibold">کتابخانه ویدیو و پادکست</p>
-            <p className="text-sm text-slate-500">پخش آنلاین و مدیریت ساده</p>
+          <div className="text-right">
+            <p className="text-xl font-semibold text-slate-900 dark:text-white">Knoverse</p>
+            <p className="text-xs text-slate-500 dark:text-slate-300">{t('tagline')}</p>
           </div>
-        </div>
+        </button>
         {onSearchChange && (
           <div className="flex-1 sm:max-w-xl">
             <input
-              aria-label="جستجو"
+              aria-label={t('searchPlaceholder')}
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
                 onSearchChange(e.target.value);
               }}
-              placeholder="جستجوی عنوان یا توضیحات..."
-              className="w-full"
+              placeholder={t('searchPlaceholder')}
+              className="w-full bg-white dark:bg-slate-800 dark:text-white"
             />
           </div>
         )}
-        <div className="flex items-center gap-3 justify-end">
+        <div className="flex items-center gap-3 justify-end flex-wrap">
+          <LanguageToggle />
+          <ThemeToggle />
           {user && (
-            <span className="text-sm text-slate-600">{user.phone}</span>
+            <span className="text-sm text-slate-600 dark:text-slate-200">{user.phone}</span>
           )}
           {user && (
             <button
               onClick={handleLogout}
-              className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:border-slate-300"
+              className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:border-slate-300 dark:border-slate-700 dark:text-slate-100 dark:hover:border-slate-500"
             >
-              خروج از حساب
+              {t('logout')}
             </button>
           )}
           <button
             onClick={handleAuthClick}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
           >
-            {user ? 'پروفایل من' : 'ورود / ثبت‌نام'}
+            {user ? t('profile') : t('login')}
           </button>
         </div>
       </div>
