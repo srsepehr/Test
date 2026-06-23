@@ -1,0 +1,168 @@
+import type { Messages } from "./fa";
+
+export const en: Messages = {
+  meta: {
+    title: "Vira — The world's knowledge, in your language",
+    description:
+      "Watch the world's videos with AI Persian subtitles. Paste a link, see the translation, learn.",
+  },
+  brand: "Vira",
+  nav: {
+    courses: "Courses",
+    news: "News",
+    stories: "Stories",
+    pricing: "Pricing",
+    signIn: "Sign in",
+    startFree: "Start free",
+    openMenu: "Open menu",
+    toggleTheme: "Toggle theme",
+    toggleLocale: "فارسی",
+  },
+  common: {
+    startFree: "Start free",
+    seeHow: "See how it works",
+    learnMore: "Learn more",
+    translated: "Translated",
+    new: "New",
+    recommended: "Recommended",
+    watchNow: "Watch now",
+  },
+  hero: {
+    eyebrow: "AI video translation",
+    title: "The world's knowledge,\nin your language",
+    subtitle:
+      "Paste a link or upload a file. In moments, get fluent subtitles and watch without the language barrier.",
+    ctaPrimary: "Start free",
+    ctaSecondary: "See how it works",
+  },
+  tension: {
+    statement:
+      "Every day, the world's best ideas are spoken in a language you don't yet understand.",
+    sub: "We take that wall down.",
+  },
+  demo: {
+    eyebrow: "The translation magic",
+    title: "One link is all it takes",
+    body: "Scroll from before to after: paste a link, watch the translation form, fluent subtitles appear.",
+    urlPlaceholder: "Paste a video link here…",
+    translate: "Translate",
+    statusPaste: "Ready to translate",
+    statusTranslating: "Translating…",
+    statusDone: "Translation ready",
+    watch: "Watch",
+    beforeLabel: "Original",
+    afterLabel: "Your language",
+    sampleTitle: "The future of human learning",
+    sampleSource: "Global Innovation Conference",
+    captionBefore: "The future belongs to those who keep learning.",
+    captionAfter: "آینده از آنِ کسانی‌ست که به یادگیری ادامه می‌دهند.",
+  },
+  how: {
+    eyebrow: "How it works",
+    title: "Three steps to understanding",
+    body: "No complexity. No waiting. Just knowledge.",
+    steps: [
+      { title: "Paste or upload", body: "Drop a video link or upload a file. That's it." },
+      {
+        title: "AI translates",
+        body: "Speech is recognized and turned into fluent subtitles.",
+      },
+      {
+        title: "Watch & take notes",
+        body: "Read along, keep your highlights, and learn deeper.",
+      },
+    ],
+  },
+  courses: {
+    eyebrow: "Courses & learning",
+    title: "Learning without borders",
+    body: "Thousands of hours from the world's best, subtitled in your language.",
+    all: "All",
+  },
+  news: {
+    eyebrow: "News & publications",
+    title: "Global news, in your language",
+    body: "Trusted headlines and analysis, instantly understandable.",
+  },
+  bios: {
+    eyebrow: "Biographies",
+    title: "Learn from those who built the world",
+    body: "Success stories, in their words, in your language.",
+  },
+  companies: {
+    eyebrow: "Company stories",
+    title: "From idea to empire",
+    body: "Follow, step by step, the companies that changed the world.",
+  },
+  proof: {
+    eyebrow: "Trusted",
+    title: "Join the learners",
+    body: "A community growing every single day.",
+    testimonialsTitle: "From our users",
+  },
+  value: {
+    eyebrow: "Why subscribe",
+    title: "Everything you need to learn",
+    body: "One subscription, full access.",
+    items: [
+      { title: "Unlimited translation", body: "Any video, any language, no cap." },
+      { title: "Fluent subtitles", body: "Translation that reads natural and accurate." },
+      { title: "Personal library", body: "Everything you watched, always within reach." },
+      { title: "Smart notes", body: "Keep your highlights beside the video." },
+      { title: "4K quality", body: "Crisp, uncompromised viewing." },
+      { title: "No ads", body: "Full focus on learning." },
+    ],
+  },
+  pricing: {
+    eyebrow: "Pricing",
+    title: "Simple and transparent",
+    body: "Cancel anytime. No strings attached.",
+    monthly: "Monthly",
+    annual: "Annual",
+    saveBadge: "Save 20%",
+    perMonth: "/ month",
+    currency: "$",
+    cta: "Choose plan",
+    faqTitle: "Frequently asked",
+    faqs: [
+      {
+        q: "Is it really free to start?",
+        a: "Yes. No credit card needed — start and translate a few videos for free.",
+      },
+      {
+        q: "Which languages are supported?",
+        a: "Over 40 source languages, with fluent subtitle output.",
+      },
+      {
+        q: "Can I cancel anytime?",
+        a: "Yes, cancel in one click with no penalties.",
+      },
+      {
+        q: "How good is the translation?",
+        a: "Translations are tuned for fluent understanding and keep improving.",
+      },
+    ],
+  },
+  finalCta: {
+    title: "Watch the world in your own language",
+    body: "Translate your first video free, today.",
+    cta: "Start free",
+  },
+  footer: {
+    tagline: "The world's knowledge, in your language.",
+    product: "Product",
+    company: "Company",
+    legal: "Legal",
+    rights: "All rights reserved.",
+    links: {
+      courses: "Courses",
+      news: "News",
+      pricing: "Pricing",
+      about: "About",
+      blog: "Blog",
+      careers: "Careers",
+      terms: "Terms",
+      privacy: "Privacy",
+    },
+  },
+};

@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+/* Dark mode driven by next-themes (class strategy) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =========================================================
+   3.1  COLOR TOKENS  (single source of truth)
+   ========================================================= */
+:root,
+.light {
+  --bg: #ffffff;
+  --bg-subtle: #f5f5f7; /* Apple light gray for alternating sections */
+  --text-primary: #1d1d1f;
+  --text-secondary: rgba(0, 0, 0, 0.56);
+  --text-tertiary: rgba(0, 0, 0, 0.4);
+
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-strong: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.9); /* top lit edge */
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  --accent: #0071e3; /* ONLY for focus/active/links/processing glow */
+
+  /* radius scale */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+
+  /* shadcn token mapping so its primitives inherit the system */
+  --background: var(--bg);
+  --foreground: var(--text-primary);
+  --card: var(--glass-bg);
+  --card-foreground: var(--text-primary);
+  --popover: var(--glass-bg-strong);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--text-primary);
+  --primary-foreground: var(--bg);
+  --secondary: var(--bg-subtle);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--bg-subtle);
+  --muted-foreground: var(--text-secondary);
+  --border: var(--glass-border);
+  --input: var(--glass-border);
+  --ring: var(--accent);
+  --radius: var(--radius-lg);
+}
+
+.dark {
+  --bg: #000000;
+  --bg-subtle: #0a0a0c;
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.62);
+  --text-tertiary: rgba(255, 255, 255, 0.4);
+
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-bg-strong: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  --accent: #2997ff;
+}
+
+/* =========================================================
+   Tailwind theme mapping (v4) — exposes tokens as utilities
+   ========================================================= */
+@theme inline {
+  --color-background: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-foreground: var(--text-primary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-accent: var(--accent);
+  --color-border: var(--glass-border);
+  --color-primary: var(--text-primary);
+  --color-primary-foreground: var(--bg);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  --font-sans: var(--font-geist), var(--font-vazir), system-ui, sans-serif;
+  --font-vazir: var(--font-vazir), system-ui, sans-serif;
+  --font-geist: var(--font-geist), system-ui, sans-serif;
+
+  /* 3.5 motion constants */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* =========================================================
+   Base
+   ========================================================= */
+@layer base {
+  * {
+    border-color: var(--glass-border);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  /* Font family switches by locale/direction */
+  :root {
+    --font-active: var(--font-geist);
+  }
+  html[lang="fa"],
+  [dir="rtl"] {
+    --font-active: var(--font-vazir);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-active), var(--font-geist), system-ui, sans-serif;
+    line-height: 1.6;
+    transition: background 300ms var(--ease-out), color 300ms var(--ease-out);
+  }
+
+  /* Persian script runs taller — a touch more line-height */
+  [dir="rtl"] body {
+    line-height: 1.8;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 28%, transparent);
+  }
+}
+
+/* =========================================================
+   3.2  THE GLASS RECIPE  (reuse everywhere)
+   ========================================================= */
+@layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-highlight), /* the lit top edge = "liquid glass" */
+      var(--glass-shadow);
+    border-radius: var(--radius-lg);
+  }
+  .glass-strong {
+    background: var(--glass-bg-strong);
+  }
+
+  /* subtle inner top highlight for solid CTAs to tie into the glass language */
+  .cta-highlight {
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+  }
+
+  /* ambient calm mesh gradient for hero / final cta backgrounds */
+  .ambient-mesh {
+    background-image:
+      radial-gradient(60% 50% at 20% 20%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%),
+      radial-gradient(50% 50% at 85% 15%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
+      radial-gradient(60% 60% at 50% 100%, color-mix(in srgb, var(--text-primary) 6%, transparent), transparent 70%);
+  }
+
+  /* =========================================================
+     3.3  TYPOGRAPHY SCALE (fluid)
+     ========================================================= */
+  .text-display {
+    font-size: clamp(2.75rem, 6vw, 5.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  .text-headline {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .text-title {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  .text-body {
+    font-size: clamp(1rem, 1.4vw, 1.125rem);
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .text-eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+  }
+  /* Persian numerals / labels shouldn't be uppercased awkwardly */
+  [dir="rtl"] .text-eyebrow {
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+  .text-tertiary {
+    color: var(--text-tertiary);
+  }
+}
+
+/* Respect reduced motion globally */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
