@@ -34,6 +34,16 @@ export const en: Messages = {
       "Paste a link or upload a file. In moments, get fluent subtitles and watch without the language barrier.",
     ctaPrimary: "Start free",
     ctaSecondary: "See how it works",
+    trust: {
+      bigLabel: "Active learners",
+      satisfaction: "Satisfaction",
+      langs: "languages",
+      support: "support",
+      quality: "quality",
+      active: "Active",
+      premium: "Premium",
+      trustedBy: "Trusted by learners worldwide",
+    },
   },
   tension: {
     statement:

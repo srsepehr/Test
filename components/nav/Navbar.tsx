@@ -38,10 +38,7 @@ export function Navbar() {
         {/* logo — inline-start */}
         <a
           href="#top"
-          className={cn(
-            "text-lg font-semibold tracking-tight transition-colors",
-            scrolled ? "text-[var(--text-primary)]" : "text-white"
-          )}
+          className="text-lg font-semibold tracking-tight text-[var(--text-primary)]"
         >
           {t.brand}
         </a>
@@ -52,12 +49,7 @@ export function Navbar() {
             <li key={l.href}>
               <a
                 href={l.href}
-                className={cn(
-                  "rounded-full px-3 py-2 text-sm font-medium transition-colors",
-                  scrolled
-                    ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                    : "text-white/70 hover:text-white"
-                )}
+                className="rounded-full px-3 py-2 text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
               >
                 {l.label}
               </a>
@@ -71,10 +63,7 @@ export function Navbar() {
           <LocaleToggle />
           <a
             href="#"
-            className={cn(
-              "hidden rounded-full px-3 py-2 text-sm font-medium transition-colors sm:inline-block",
-              scrolled ? "text-[var(--text-primary)]" : "text-white"
-            )}
+            className="hidden rounded-full px-3 py-2 text-sm font-medium text-[var(--text-primary)] sm:inline-block"
           >
             {t.nav.signIn}
           </a>

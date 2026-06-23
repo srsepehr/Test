@@ -214,30 +214,18 @@
 }
 
 /* =========================================================
-   Illuminated Hero  (21st.dev — efferd/illuminated-hero), restyled.
-   The component references these glow shapes + load keyframes, which
-   are not part of the snippet, so they are recreated here.
+   Marquee  (21st.dev — easemize/glassmorphism-trust-hero), restyled.
    ========================================================= */
-@keyframes onloadbgt {
-  0% { opacity: 0; transform: translate(0, -70%) scale(1); }
-  100% { opacity: 0.6; transform: translate(0, -70%) scale(1.2); }
-}
-@keyframes onloadbgb {
-  0% { opacity: 0; transform: translate(0, -70%) scale(1.45); }
-  100% { opacity: 0.55; transform: translate(0, -70%) scale(1.2); }
-}
-@keyframes onloadopacity {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+@keyframes vira-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 @layer utilities {
-  .shadow-bgt {
-    background: radial-gradient(closest-side, rgba(255, 238, 210, 0.85), rgba(255, 238, 210, 0) 72%);
-    filter: blur(18px);
+  .animate-marquee {
+    animation: vira-marquee 40s linear infinite;
   }
-  .shadow-bgb {
-    background: radial-gradient(closest-side, rgba(255, 168, 102, 0.6), rgba(255, 138, 76, 0) 72%);
-    filter: blur(34px);
+  [dir="rtl"] .animate-marquee {
+    animation-direction: reverse;
   }
 }
 

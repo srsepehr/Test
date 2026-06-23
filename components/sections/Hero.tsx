@@ -1,204 +1,181 @@
 "use client";
 
 /**
- * Hero — 21st.dev "Illuminated Hero" (efferd/illuminated-hero), restyled to the
- * project system: dark cinematic stage, illuminated glow headline (SVG glow-4
- * filter), Persian/RTL content, project CTAs + glass URL field.
+ * Hero — 21st.dev "Glassmorphism Trust Hero" (easemize/glassmorphism-trust-hero),
+ * restyled to the project system: theme-aware (ambient mesh, not a dark photo),
+ * GlassCard surfaces, Persian/RTL content, project CTAs, real stats + a marquee
+ * of source "logos". formatNumber for every number.
  */
 
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { Target, Crown, Play, Sparkles } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
+import { stats, newsSources } from "@/lib/data";
 import { DURATION, EASE_OUT, STAGGER } from "@/lib/motion";
-import { cn } from "@/lib/utils";
 import { CTAButton } from "@/components/primitives/CTAButton";
+import { GlassCard } from "@/components/primitives/GlassCard";
 
 export function Hero() {
-  const { t, dir } = useLocale();
+  const { t, fmt } = useLocale();
   const reduce = useReducedMotion();
 
   const container = {
     hidden: {},
-    show: { transition: { staggerChildren: STAGGER, delayChildren: 0.15 } },
+    show: { transition: { staggerChildren: STAGGER, delayChildren: 0.1 } },
   };
   const item = {
     hidden: reduce ? { opacity: 0 } : { opacity: 0, y: 24 },
     show: { opacity: 1, y: 0, transition: { duration: DURATION.slow, ease: EASE_OUT } },
   };
 
-  // glow duplicate text can't contain line breaks — use a single line
-  const titleGlow = t.hero.title.replace("\n", " ");
+  const lines = t.hero.title.split("\n");
+  const tr = t.hero.trust;
 
   return (
     <section
       id="top"
-      className="relative flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden bg-black px-6 text-white sm:px-8"
+      className="ambient-mesh relative flex min-h-[100svh] w-full items-center overflow-hidden px-6 pt-28 pb-16 sm:px-8"
     >
-      {/* illuminated background glow */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-full w-full max-w-[44em] -translate-x-1/2 -translate-y-1/2">
-        <div className="shadow-bgt absolute size-full translate-[0_-70%] scale-[1.2] animate-[onloadbgt_1.2s_ease-in-out_forwards] rounded-[100em] opacity-60" />
-        <div className="shadow-bgb absolute size-full translate-[0_-70%] scale-[1.2] animate-[onloadbgb_1.2s_ease-in-out_forwards] rounded-[100em] opacity-60" />
+      <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-12 lg:grid-cols-12">
+        {/* LEFT — headline + CTAs */}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="flex flex-col items-start gap-7 lg:col-span-6"
+        >
+          <motion.div variants={item}>
+            <span className="glass inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-medium text-[var(--text-secondary)]">
+              <Sparkles className="h-3.5 w-3.5 text-[var(--accent)]" aria-hidden />
+              {t.hero.eyebrow}
+            </span>
+          </motion.div>
+
+          <motion.h1
+            variants={item}
+            className="text-display text-balance text-[var(--text-primary)]"
+          >
+            {lines.map((line, i) => (
+              <span key={i} className="block">
+                {line}
+              </span>
+            ))}
+          </motion.h1>
+
+          <motion.p variants={item} className="text-body max-w-[560px]">
+            {t.hero.subtitle}
+          </motion.p>
+
+          <motion.div variants={item} className="flex flex-col gap-3 sm:flex-row">
+            <CTAButton href="#pricing">{t.hero.ctaPrimary}</CTAButton>
+            <CTAButton href="#demo" variant="secondary" className="gap-2">
+              <Play className="h-4 w-4 fill-current" aria-hidden />
+              {t.hero.ctaSecondary}
+            </CTAButton>
+          </motion.div>
+        </motion.div>
+
+        {/* RIGHT — glass trust cards */}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="space-y-5 lg:col-span-6"
+        >
+          {/* stats card */}
+          <motion.div variants={item}>
+            <GlassCard className="p-7">
+              <div className="flex items-center gap-4">
+                <span className="glass flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)]">
+                  <Target className="h-6 w-6 text-[var(--text-primary)]" aria-hidden />
+                </span>
+                <div>
+                  <div className="text-3xl font-semibold tabular-nums text-[var(--text-primary)]">
+                    {fmt(250000)}
+                  </div>
+                  <div className="text-sm text-[var(--text-secondary)]">{tr.bigLabel}</div>
+                </div>
+              </div>
+
+              {/* satisfaction progress */}
+              <div className="mt-8 space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-[var(--text-secondary)]">{tr.satisfaction}</span>
+                  <span className="font-medium tabular-nums text-[var(--text-primary)]">
+                    {fmt(98)}%
+                  </span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--glass-border)]">
+                  <div
+                    className="h-full rounded-full bg-[var(--text-primary)]"
+                    style={{ width: "98%" }}
+                  />
+                </div>
+              </div>
+
+              <div className="my-6 h-px w-full bg-[var(--glass-border)]" />
+
+              {/* mini stats */}
+              <div className="grid grid-cols-3 gap-4 text-center">
+                {[
+                  { v: `${fmt(40)}+`, l: tr.langs },
+                  { v: `${fmt(24)}/${fmt(7)}`, l: tr.support },
+                  { v: `${fmt(4)}K`, l: tr.quality },
+                ].map((m) => (
+                  <div key={m.l}>
+                    <div className="text-xl font-semibold tabular-nums text-[var(--text-primary)]">
+                      {m.v}
+                    </div>
+                    <div className="text-eyebrow mt-1">{m.l}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* tag pills */}
+              <div className="mt-7 flex flex-wrap gap-2">
+                <span className="glass inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium text-[var(--text-secondary)]">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                  </span>
+                  {tr.active}
+                </span>
+                <span className="glass inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium text-[var(--text-secondary)]">
+                  <Crown className="h-3 w-3 text-[var(--accent)]" aria-hidden />
+                  {tr.premium}
+                </span>
+              </div>
+            </GlassCard>
+          </motion.div>
+
+          {/* marquee card */}
+          <motion.div variants={item}>
+            <GlassCard className="py-7">
+              <h3 className="text-eyebrow mb-6 px-7">{tr.trustedBy}</h3>
+              <div
+                className="relative flex overflow-hidden"
+                style={{
+                  maskImage:
+                    "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+                  WebkitMaskImage:
+                    "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+                }}
+              >
+                <div className="animate-marquee flex w-max gap-10 whitespace-nowrap px-5">
+                  {[...newsSources, ...newsSources].map((s, i) => (
+                    <span
+                      key={i}
+                      className="text-lg font-semibold text-[var(--text-tertiary)]"
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </GlassCard>
+          </motion.div>
+        </motion.div>
       </div>
-
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="relative z-10 mx-auto flex w-full max-w-[920px] flex-col items-center text-center"
-      >
-        {/* eyebrow */}
-        <motion.div variants={item}>
-          <span className="glass inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-medium text-white/70">
-            <Sparkles className="h-3.5 w-3.5 text-[#fcd9a8]" aria-hidden />
-            {t.hero.eyebrow}
-          </span>
-        </motion.div>
-
-        {/* illuminated glow headline */}
-        <motion.h1
-          variants={item}
-          className="text-display mt-8 max-w-[16ch] text-balance"
-        >
-          <span
-            className={cn(
-              "relative inline-block",
-              "before:absolute before:animate-[onloadopacity_1s_ease-out_forwards] before:opacity-0 before:content-[attr(data-text)]",
-              "before:bg-[linear-gradient(0deg,#dfe5ee_0%,#fffaf6_50%)] before:bg-clip-text before:text-[#fffaf6]",
-              "filter-[url(#glow-4)]"
-            )}
-            data-text={titleGlow}
-          >
-            {titleGlow}
-          </span>
-        </motion.h1>
-
-        {/* subhead */}
-        <motion.p variants={item} className="mt-7 max-w-[600px] text-balance text-lg text-white/65">
-          {t.hero.subtitle}
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div variants={item} className="mt-9 flex flex-col items-center gap-3 sm:flex-row">
-          <CTAButton href="#pricing">{t.hero.ctaPrimary}</CTAButton>
-          <CTAButton href="#demo" variant="secondary">
-            {t.hero.ctaSecondary}
-          </CTAButton>
-        </motion.div>
-
-        {/* product hint: glass "paste a link" field */}
-        <motion.form
-          variants={item}
-          onSubmit={(e) => e.preventDefault()}
-          className="glass mt-12 flex w-full max-w-[560px] items-center gap-2 rounded-full p-2 ps-5"
-        >
-          <input
-            type="url"
-            inputMode="url"
-            dir={dir}
-            aria-label={t.demo.urlPlaceholder}
-            placeholder={t.demo.urlPlaceholder}
-            className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/40"
-          />
-          <CTAButton size="sm" type="submit" className="shrink-0 gap-1.5">
-            {t.demo.translate}
-            <ArrowLeft className="h-4 w-4 ltr:rotate-180" aria-hidden />
-          </CTAButton>
-        </motion.form>
-      </motion.div>
-
-      {/* glow-4 SVG filter (from the 21st.dev component) */}
-      <svg
-        className="absolute -z-1 h-0 w-0"
-        width="1440"
-        height="300"
-        viewBox="0 0 1440 300"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <defs>
-          <filter
-            id="glow-4"
-            colorInterpolationFilters="sRGB"
-            x="-50%"
-            y="-200%"
-            width="200%"
-            height="500%"
-          >
-            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur4" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="19" result="blur19" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur9" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="30" result="blur30" />
-            <feColorMatrix
-              in="blur4"
-              result="color-0-blur"
-              type="matrix"
-              values="1 0 0 0 0  0 0.9803921568627451 0 0 0  0 0 0.9647058823529412 0 0  0 0 0 0.8 0"
-            />
-            <feOffset in="color-0-blur" result="layer-0-offsetted" dx="0" dy="0" />
-            <feColorMatrix
-              in="blur19"
-              result="color-1-blur"
-              type="matrix"
-              values="0.8156862745098039 0 0 0 0  0 0.49411764705882355 0 0 0  0 0 0.2627450980392157 0 0  0 0 0 1 0"
-            />
-            <feOffset in="color-1-blur" result="layer-1-offsetted" dx="0" dy="2" />
-            <feColorMatrix
-              in="blur9"
-              result="color-2-blur"
-              type="matrix"
-              values="1 0 0 0 0  0 0.6666666666666666 0 0 0  0 0 0.36470588235294116 0 0  0 0 0 0.65 0"
-            />
-            <feOffset in="color-2-blur" result="layer-2-offsetted" dx="0" dy="2" />
-            <feColorMatrix
-              in="blur30"
-              result="color-3-blur"
-              type="matrix"
-              values="1 0 0 0 0  0 0.611764705882353 0 0 0  0 0 0.39215686274509803 0 0  0 0 0 1 0"
-            />
-            <feOffset in="color-3-blur" result="layer-3-offsetted" dx="0" dy="2" />
-            <feColorMatrix
-              in="blur30"
-              result="color-4-blur"
-              type="matrix"
-              values="0.4549019607843137 0 0 0 0  0 0.16470588235294117 0 0 0  0 0 0 0 0  0 0 0 1 0"
-            />
-            <feOffset in="color-4-blur" result="layer-4-offsetted" dx="0" dy="16" />
-            <feColorMatrix
-              in="blur30"
-              result="color-5-blur"
-              type="matrix"
-              values="0.4235294117647059 0 0 0 0  0 0.19607843137254902 0 0 0  0 0 0.11372549019607843 0 0  0 0 0 1 0"
-            />
-            <feOffset in="color-5-blur" result="layer-5-offsetted" dx="0" dy="64" />
-            <feColorMatrix
-              in="blur30"
-              result="color-6-blur"
-              type="matrix"
-              values="0.21176470588235294 0 0 0 0  0 0.10980392156862745 0 0 0  0 0 0.07450980392156863 0 0  0 0 0 1 0"
-            />
-            <feOffset in="color-6-blur" result="layer-6-offsetted" dx="0" dy="64" />
-            <feColorMatrix
-              in="blur30"
-              result="color-7-blur"
-              type="matrix"
-              values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.68 0"
-            />
-            <feOffset in="color-7-blur" result="layer-7-offsetted" dx="0" dy="64" />
-            <feMerge>
-              <feMergeNode in="layer-0-offsetted" />
-              <feMergeNode in="layer-1-offsetted" />
-              <feMergeNode in="layer-2-offsetted" />
-              <feMergeNode in="layer-3-offsetted" />
-              <feMergeNode in="layer-4-offsetted" />
-              <feMergeNode in="layer-5-offsetted" />
-              <feMergeNode in="layer-6-offsetted" />
-              <feMergeNode in="layer-7-offsetted" />
-              <feMergeNode in="layer-0-offsetted" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-      </svg>
     </section>
   );
 }
