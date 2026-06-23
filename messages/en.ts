@@ -72,14 +72,20 @@ export const en: Messages = {
     title: "Three steps to understanding",
     body: "No complexity. No waiting. Just knowledge.",
     steps: [
-      { title: "Paste or upload", body: "Drop a video link or upload a file. That's it." },
+      {
+        title: "Paste or upload",
+        body: "Drop a video link or upload a file. That's it.",
+        benefits: ["YouTube, Aparat, or a file", "No software to install"],
+      },
       {
         title: "AI translates",
         body: "Speech is recognized and turned into fluent subtitles.",
+        benefits: ["Automatic speech recognition", "40+ source languages"],
       },
       {
         title: "Watch & take notes",
         body: "Read along, keep your highlights, and learn deeper.",
+        benefits: ["Synced subtitles", "Saved to your library"],
       },
     ],
   },
